@@ -6,6 +6,9 @@ import numpy as np
 import pandas as pd
 from iex import Stock
 
+#personal notes:
+# - periods are based on what the increments on the charted data are (i.e., if 1m is based on day, then the period will be days)
+
 def sp500_tickers() -> [str]:
     resp = requests.get('http://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
     soup = bs.BeautifulSoup(resp.text, 'lxml')
@@ -21,12 +24,12 @@ def nyse_is_open() -> str: #return whether or not the stock market is open right
     response = requests.get("https://www.stockmarketclock.com/api-v1/status?exchange=nyse")
     return response.json()['results']['nyse']['status']
 
-def test_for_hourly_analysis():
+def test_for_hourly_analysis(): #note that this function should be based on the range of init_get_data
     response = requests.get("https://api.iextrading.com/1.0/stock/aapl/chart/1d")
     list_of_dicts = response.json()
     time_and_close = {'minute': [], 'close': []}
     for dict_ in list_of_dicts:
-        if int(dict_['minute'][-2:]) == 0:
+        if int(dict_['minute'][-2:]) == 59:
             time_and_close['minute'].append(dict_['minute'])
             time_and_close['close'].append(dict_['close']) 
     return time_and_close
