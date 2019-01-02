@@ -21,6 +21,17 @@ def nyse_is_open() -> str: #return whether or not the stock market is open right
     response = requests.get("https://www.stockmarketclock.com/api-v1/status?exchange=nyse")
     return response.json()['results']['nyse']['status']
 
+def test_for_hourly_analysis():
+    response = requests.get("https://api.iextrading.com/1.0/stock/aapl/chart/1d")
+    list_of_dicts = response.json()
+    time_and_close = {'minute': [], 'close': []}
+    for dict_ in list_of_dicts:
+        if int(dict_['minute'][-2:]) == 0:
+            time_and_close['minute'].append(dict_['minute'])
+            time_and_close['close'].append(dict_['close']) 
+    return time_and_close
+
+
 def init_get_data(stock: str):
     stock_chart = Stock(stock).chart_table(range="1y")
     return stock_chart[['date', 'close']]
@@ -92,3 +103,4 @@ if __name__ == "__main__":
     #for _ in range(20):
         #print(Stock("F").price())
     print(nyse_is_open())
+    print(test_for_hourly_analysis())
