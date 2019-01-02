@@ -5,6 +5,7 @@ import bs4 as bs
 import numpy as np
 import pandas as pd
 from iex import Stock
+import matplotlib.pyplot as plt
 
 #personal notes:
 # - periods are based on what the increments on the charted data are (i.e., if 1m is based on day, then the period will be days)
@@ -35,8 +36,8 @@ def test_for_hourly_analysis(): #note that this function should be based on the 
     return time_and_close
 
 
-def init_get_data(stock: str):
-    stock_chart = Stock(stock).chart_table(range="1y")
+def init_get_data(stock: str, range_: str):
+    stock_chart = Stock(stock).chart_table(range=range_)
     return stock_chart[['date', 'close']]
 
 def init_rsi_func(prices, n=14):
@@ -90,20 +91,32 @@ def computeMACD(x, slow=26, fast=12):
     emafast = ema_func(x, fast)
     return emaslow, emafast, emafast - emaslow
 
-def init_data(stock: str) -> None:
-    stock_data = init_get_data(stock)
+def init_data(stock: str, range_: str) -> None:
+    stock_data = init_get_data(stock, range_)
     rsi, deltas, up, down = init_rsi_func(stock_data['close'], 8) #8 periods, instead of default 14; 70/30 is indicator for oversold, overbought
     stock_data = stock_data.assign(rsi=rsi, deltas=deltas, up=up, down=down) 
     file_name = 'data-' + stock + '.csv'
     stock_data.to_csv(file_name, index=False)
 
+def use_data(stock): #still a testing func
+    file_name = 'data-' + stock + '.csv'
+    data = pd.read_csv(file_name)
+    return [data['close'], ma_func(data['close'], 13), ma_func(data['close'], 30), ma_func(data['close'], 200)]
+
 if __name__ == "__main__":
     my_stocks = ['SPY', 'AMZN', 'AMD', 'AAPL', 'NVDA', 'TSLA']
     #if len(my_stocks) == 0:
         #my_stocks = sp500_tickers()
-    #for stock in my_stocks:
-        #init_data(stock)
-    #for _ in range(20):
-        #print(Stock("F").price())
+        
+    for stock in my_stocks:
+        init_data(stock, '1y') #change range for iextrading api here
+
     print(nyse_is_open())
     print(test_for_hourly_analysis())
+    
+    for data in use_data('SPY'):
+        plt.plot(data)
+    plt.show()
+
+    #for _ in range(20):
+        #print(Stock("F").price())
