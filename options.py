@@ -109,7 +109,7 @@ def computeMACD(x, slow=26, fast=12):
 
 def init_data(stock: str, range_: str) -> None:
     stock_data = init_get_data(stock, range_)
-    rsi, deltas, up, down = init_rsi_func(stock_data['close'], 8) #8 periods, instead of default 14; 70/30 is indicator for oversold, overbought
+    rsi, deltas, up, down = init_rsi_func(stock_data['close'], 14) #8 periods, instead of default 14; 70/30 is indicator for oversold, overbought
     stock_data = stock_data.assign(rsi=rsi, deltas=deltas, up=up, down=down) 
     file_name = 'data-' + stock + '.csv'
     stock_data.to_csv(file_name, index=False)
@@ -119,12 +119,14 @@ def use_data(stock): #still a testing func
     data = pd.read_csv(file_name)
     list_of_periods = [1, 13, 30, 200]
     max_len = len(data['close'])
-    smas = []
+    smas = [data['date'], data['rsi']]
     for i in list_of_periods:
         sma = ma_func(data['close'], i)
         temp = np.concatenate([np.array([0]*(max_len-len(sma))), sma])
         smas.append(temp)
     return smas
+
+#write computeMACD funct here just like user_data
 
 if __name__ == "__main__":
     my_stocks = ['SPY', 'AMZN', 'AMD', 'AAPL', 'NVDA', 'TSLA']
@@ -134,11 +136,18 @@ if __name__ == "__main__":
     #for stock in my_stocks:
         #init_data(stock, '5y') #change range for iextrading api here
 
-    print(nyse_is_open())
+    #print(nyse_is_open())
     #print(test_for_hourly_analysis())
-    
-    for data in use_data('SPY'):
-        plt.plot(data)
+
+    plt.subplot(2, 1, 1) #replace with new computeMACD funct
+    for data in use_data('SPY')[2:]:
+        plt.plot(use_data('SPY')[0], data)
+    plt.xticks(rotation=90)
+    plt.subplot(2, 1, 2)
+    plt.plot(use_data('SPY')[0], use_data('SPY')[1])
+    plt.plot(use_data('SPY')[0], np.array([30]*len(use_data('SPY')[0])))
+    plt.plot(use_data('SPY')[0], np.array([70]*len(use_data('SPY')[0])))
+    plt.xticks(rotation=90)
     plt.show()
 
     #for _ in range(20):
