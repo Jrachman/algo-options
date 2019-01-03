@@ -10,6 +10,10 @@ import matplotlib.pyplot as plt
 #personal notes:
 # - periods are based on what the increments on the charted data are (i.e., if 1m is based on day, then the period will be days)
 
+#need to do:
+# - fix the x-axis to be the date for graphing
+# - remove the first 200 data points when graphing in order to not have to add the zeros at the beginning and just show when the 200 days starts
+
 def sp500_tickers() -> [str]:
     resp = requests.get('http://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
     soup = bs.BeautifulSoup(resp.text, 'lxml')
