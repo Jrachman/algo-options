@@ -10,6 +10,18 @@ import matplotlib.pyplot as plt
 #personal notes:
 # - periods are based on what the increments on the charted data are (i.e., if 1m is based on day, then the period will be days)
 
+#jeff bishop seminar notes:
+# - 13 hourly ma and 30 hourly ma
+# - 200 hourly ma is support (lock in when 13 and 30 goes down to 200)
+# - take half at 100% then you cannot lose and you just let the other half run
+# - don’t sell yourself short; let the chart run
+# - look for overvaluation then 13/30 crossover and 200 ma safety
+# - the farther 13/30 is above the 200 ma, the more room there is to correct
+# - let yourself fail but don't lose more than 50% (stop 50% less than what you want to gain)
+# - 2 or 4 week window foxr buying options (if you think move is going to happen in 2 weeks, buy for 4 weeks)
+# - rsi over 80 means overbought
+# - rsi under 20 means oversold
+
 #need to do:
 # - fix the x-axis to be the date for graphing
 # - remove the first 200 data points when graphing in order to not have to add the zeros at the beginning and just show when the 200 days starts
