@@ -101,18 +101,25 @@ def init_data(stock: str, range_: str) -> None:
 def use_data(stock): #still a testing func
     file_name = 'data-' + stock + '.csv'
     data = pd.read_csv(file_name)
-    return [data['close'], ma_func(data['close'], 13), ma_func(data['close'], 30), ma_func(data['close'], 200)]
+    list_of_periods = [1, 13, 30, 200]
+    max_len = len(data['close'])
+    smas = []
+    for i in list_of_periods:
+        sma = ma_func(data['close'], i)
+        temp = np.concatenate([np.array([0]*(max_len-len(sma))), sma])
+        smas.append(temp)
+    return smas
 
 if __name__ == "__main__":
     my_stocks = ['SPY', 'AMZN', 'AMD', 'AAPL', 'NVDA', 'TSLA']
     #if len(my_stocks) == 0:
         #my_stocks = sp500_tickers()
         
-    for stock in my_stocks:
-        init_data(stock, '1y') #change range for iextrading api here
+    #for stock in my_stocks:
+        #init_data(stock, '5y') #change range for iextrading api here
 
     print(nyse_is_open())
-    print(test_for_hourly_analysis())
+    #print(test_for_hourly_analysis())
     
     for data in use_data('SPY'):
         plt.plot(data)
