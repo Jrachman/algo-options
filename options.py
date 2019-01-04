@@ -23,8 +23,8 @@ import matplotlib.pyplot as plt
 # - rsi under 20 means oversold
 
 #need to do:
-# - fix the x-axis to be the date for graphing
-# - remove the first 200 data points when graphing in order to not have to add the zeros at the beginning and just show when the 200 days starts
+# - create funct for the current trading day and checking the current close and calculating
+# - create global for opening csv files given stock
 
 def sp500_tickers() -> [str]:
     resp = requests.get('http://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
@@ -89,12 +89,12 @@ def init_rsi_func(prices, n=14):
     return rsi, np.diff(pd.concat([pd.Series([0]), prices])), up, down
 
 def ma_func(values, window):
-    weigths = np.repeat(1.0, window) / window
+    weigths = np.repeat(1, window) / window
     smas = np.convolve(values, weigths, 'valid')
     return smas # as a numpy array
 
 def ema_func(values, window):
-    weights = np.exp(np.linspace(-1., 0., window))
+    weights = np.exp(np.linspace(-1, 0, window))
     weights /= weights.sum()
     a =  np.convolve(values, weights, mode='full')[:len(values)]
     a[:window] = a[window]
@@ -105,11 +105,13 @@ def computeMACD(x, slow=26, fast=12):
     #return value is emaslow, emafast, macd which are len(x) arrays
     emaslow = ema_func(x, slow)
     emafast = ema_func(x, fast)
-    return emaslow, emafast, emafast - emaslow
+    macd = emafast - emaslow
+    sma_of_macd = ma_func(macd, 10)
+    return emaslow, emafast, macd, sma_of_macd
 
 def init_data(stock: str, range_: str) -> None:
     stock_data = init_get_data(stock, range_)
-    rsi, deltas, up, down = init_rsi_func(stock_data['close'], 14) #8 periods, instead of default 14; 70/30 is indicator for oversold, overbought
+    rsi, deltas, up, down = init_rsi_func(stock_data['close'], 8) #8 periods, instead of default 14; 70/30 is indicator for oversold, overbought
     stock_data = stock_data.assign(rsi=rsi, deltas=deltas, up=up, down=down) 
     file_name = 'data-' + stock + '.csv'
     stock_data.to_csv(file_name, index=False)
@@ -126,29 +128,101 @@ def use_data(stock): #still a testing func
         smas.append(temp)
     return smas
 
-#write computeMACD funct here just like user_data
+def current_day_calc(stock, n=14): #STILL IN THE WORKS!; would add nyse_is_open but will do that later
+    current_price = Stock(stock).price()
+    file_name = 'data-' + stock + '.csv'
+    data = pd.read_csv(file_name)
+
+    #rsi
+    delta = current_price - data['close'].iloc[-1]
+    up = data['up'].iloc[-1]
+    down = data['down'].iloc[-1]
+    if delta > 0:
+        upval = delta
+        downval = 0
+    else:
+        upval = 0
+        downval = -delta
+    up = (up * (n - 1) + upval) / n
+    down = (down * (n - 1) + downval) / n
+    rs = up / down
+    rsi = 100 - 100 / (1 + rs)
+    print(current_price, up, down, rs, rsi) #save up, down, and rsi
+    
+    test_data = pd.concat([data['close'], pd.Series([current_price])])
+    slow, fast, macd, sma_of_macd = computeMACD(test_data, slow=30, fast=13)
+    max_len = len(data['close'])
+    emas = [data['date'], data['rsi'], data['close']]
+    for i in [slow, fast, macd, sma_of_macd]:
+        temp = np.concatenate([np.array([0]*(max_len-len(i))), i])
+        emas.append(temp)
+    
+    return up, down, rsi, emas
+
+
+
+def use_data_macd(stock):
+    file_name = 'data-' + stock + '.csv'
+    data = pd.read_csv(file_name)
+    slow, fast, macd, sma_of_macd = computeMACD(data['close'], slow=30, fast=13)
+    max_len = len(data['close'])
+    emas = [data['date'], data['rsi'], data['close']]
+    for i in [slow, fast, macd, sma_of_macd]:
+        temp = np.concatenate([np.array([0]*(max_len-len(i))), i])
+        emas.append(temp)
+    return emas
 
 if __name__ == "__main__":
     my_stocks = ['SPY', 'AMZN', 'AMD', 'AAPL', 'NVDA', 'TSLA']
     #if len(my_stocks) == 0:
         #my_stocks = sp500_tickers()
         
-    #for stock in my_stocks:
-        #init_data(stock, '5y') #change range for iextrading api here
+    for stock in my_stocks:
+        init_data(stock, '5y') #change range for iextrading api here
 
     #print(nyse_is_open())
     #print(test_for_hourly_analysis())
 
-    plt.subplot(2, 1, 1) #replace with new computeMACD funct
-    for data in use_data('SPY')[2:]:
-        plt.plot(use_data('SPY')[0], data)
-    plt.xticks(rotation=90)
-    plt.subplot(2, 1, 2)
-    plt.plot(use_data('SPY')[0], use_data('SPY')[1])
-    plt.plot(use_data('SPY')[0], np.array([30]*len(use_data('SPY')[0])))
-    plt.plot(use_data('SPY')[0], np.array([70]*len(use_data('SPY')[0])))
-    plt.xticks(rotation=90)
-    plt.show()
+    #'''
+    stock_selected = 'AMD'
+    #print(current_day_calc(stock_selected)) #NEW ALGO FOR CURRENT REALTIME!
 
+    #'''
+    plt.subplot(3, 1, 1) #replace with new computeMACD funct (done)
+    for data in use_data_macd(stock_selected)[2:-2]:
+        plt.plot(use_data_macd(stock_selected)[0][-14:], data[-14:])
+    #for data in use_data(stock_selected)[3:]:
+        #plt.plot(use_data(stock_selected)[0], data)
+    plt.xticks(rotation=90)
+
+    plt.subplot(3, 1, 2)
+    plt.plot(use_data_macd(stock_selected)[0][-30:], use_data_macd(stock_selected)[1][-30:])
+    plt.plot(use_data_macd(stock_selected)[0][-30:], np.array([30]*len(use_data_macd(stock_selected)[0]))[-30:])
+    plt.plot(use_data_macd(stock_selected)[0][-30:], np.array([70]*len(use_data_macd(stock_selected)[0]))[-30:])
+    plt.xticks(rotation=90)
+    
+    plt.subplot(3, 1, 3)
+    for data in use_data_macd(stock_selected)[-2:]:
+        plt.plot(use_data_macd(stock_selected)[0][-30:], data[-30:])
+    plt.xticks(rotation=90)
+
+    plt.show()
+    #'''
+    #paste new realtime graph here
+    '''
+
+    plt.subplot(2, 1, 1) #replace with new computeMACD funct (done)
+    for data in use_data('AAPL')[2:]:
+        plt.plot(use_data('AAPL')[0], data)
+    plt.xticks(rotation=90)
+
+    plt.subplot(2, 1, 2)
+    plt.plot(use_data_macd('AAPL')[0], use_data_macd('AAPL')[1])
+    plt.plot(use_data('AAPL')[0], np.array([30]*len(use_data('AAPL')[0])))
+    plt.plot(use_data('AAPL')[0], np.array([70]*len(use_data('AAPL')[0])))
+    plt.xticks(rotation=90)
+
+    plt.show()
+    '''
     #for _ in range(20):
         #print(Stock("F").price())
