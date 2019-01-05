@@ -95,6 +95,7 @@ def ma_func(values, window):
 
 def ema_func(values, window):
     weights = np.exp(np.linspace(-1, 0, window))
+    #print(weights)
     weights /= weights.sum()
     a =  np.convolve(values, weights, mode='full')[:len(values)]
     a[:window] = a[window]
@@ -147,7 +148,7 @@ def current_day_calc(stock, n=14): #STILL IN THE WORKS!; would add nyse_is_open 
     down = (down * (n - 1) + downval) / n
     rs = up / down
     rsi = 100 - 100 / (1 + rs)
-    print(current_price, up, down, rs, rsi) #save up, down, and rsi
+    #print(current_price, up, down, rs, rsi) #save up, down, and rsi
     
     test_data = pd.concat([data['close'], pd.Series([current_price])])
     slow, fast, macd, sma_of_macd = computeMACD(test_data, slow=30, fast=13)
@@ -156,8 +157,8 @@ def current_day_calc(stock, n=14): #STILL IN THE WORKS!; would add nyse_is_open 
     for i in [slow, fast, macd, sma_of_macd]:
         temp = np.concatenate([np.array([0]*(max_len-len(i))), i])
         emas.append(temp)
-    
-    return up, down, rsi, emas
+    #print(emas)
+    return current_price, up, down, rsi, emas
 
 
 
@@ -185,7 +186,7 @@ if __name__ == "__main__":
 
     #'''
     stock_selected = 'AMD'
-    #print(current_day_calc(stock_selected)) #NEW ALGO FOR CURRENT REALTIME!
+    print(current_day_calc(stock_selected)) #NEW ALGO FOR CURRENT REALTIME!
 
     #'''
     plt.subplot(3, 1, 1) #replace with new computeMACD funct (done)
