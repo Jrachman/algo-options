@@ -17,8 +17,9 @@ import matplotlib.pyplot as plt
 # - ema
 # - macd (through computeMACD function) -> might not need?
 
-#for reference:
 '''
+for reference:
+    
 file_name = 'data-' + stock + '.csv'
 data = pd.read_csv(file_name)
 '''
