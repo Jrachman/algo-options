@@ -104,7 +104,7 @@ def init_data(stock: str, range_: str) -> None: #maybe change range_ to window?
     stock_data.to_csv(file_name, index=False)
 
 if __name__ == "__main__":
-    stock_selected = 'AMD'
+    stock_selected = 'CRON'
     init_data(stock_selected, '5y')
 
     '''
