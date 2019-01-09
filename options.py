@@ -174,7 +174,7 @@ def use_data_macd(stock):
     return emas
 
 if __name__ == "__main__":
-    my_stocks = ['SPY', 'AMZN', 'AMD', 'AAPL', 'NVDA', 'TSLA']
+    my_stocks = ['CRON']#, 'SPY', 'AMZN', 'AMD', 'AAPL', 'NVDA', 'TSLA']
     #if len(my_stocks) == 0:
         #my_stocks = sp500_tickers()
         
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     #print(test_for_hourly_analysis())
 
     #'''
-    stock_selected = 'AMD'
+    stock_selected = 'CRON'
     print(current_day_calc(stock_selected)) #NEW ALGO FOR CURRENT REALTIME!
 
     #'''

@@ -17,12 +17,9 @@ import matplotlib.pyplot as plt
 # - ema
 # - macd (through computeMACD function) -> might not need?
 
-'''
-for reference:
-
-file_name = 'data-' + stock + '.csv'
-data = pd.read_csv(file_name)
-'''
+def nyse_is_open() -> str: #return whether or not the stock market is open right now. if it is, then continue running application; else, stop feeding data as long as market is closed
+    response = requests.get("https://www.stockmarketclock.com/api-v1/status?exchange=nyse")
+    return response.json()['results']['nyse']['status']
 
 def init_get_data(stock: str, range_: str):
     stock_chart = Stock(stock).chart_table(range=range_)
@@ -61,20 +58,22 @@ def rsi_func(stock, data, n=14, init=False):
         temp_down[-1] = down
         down = temp_down
         return rsi, up, down
-    elif init == False: #should add market close and open status in order to append to excel or not
+    elif init == False:
         current_price = Stock(stock).price()
-        delta = current_price - prices[-1]
+        delta = current_price - prices.iloc[-1]
         if delta > 0:
             upval = delta
             downval = 0
         else:
             upval = 0
             downval = -delta
-        up = (up * (n - 1) + upval) / n
-        down = (down * (n - 1) + downval) / n
+        up = (data['up'].iloc[-1] * (n - 1) + upval) / n
+        down = (data['down'].iloc[-1] * (n - 1) + downval) / n
         rs = up / down
         rsi = 100 - 100 / (1 + rs)
         return current_price, rsi, up, down
+    #else:
+        #return 'string return response here'
 
 
 def ma_func(values, window):
@@ -103,10 +102,27 @@ def init_data(stock: str, range_: str) -> None: #maybe change range_ to window?
     file_name = 'data-' + stock + '.csv'
     stock_data.to_csv(file_name, index=False)
 
+def retrieve_data(stock: str):
+    file_name = 'data-' + stock + '.csv'
+    return pd.read_csv(file_name)
+
 if __name__ == "__main__":
+    #nyse_is_open situation (notes below might be irrelevant)
+    # - if open, then run through
+    # - if closed, then check if the previously added date to csv is equal to the prev date in iextrading
+    
     stock_selected = 'CRON'
+
+    #later want to check if csv exists, check if the file is up to date with the prev close as the last entry
     init_data(stock_selected, '5y')
 
+    #current day data check will be below
+    # - so if we put this into a while loop checking nyse_is_open, then if it becomes False, then go into "end-game mode"
+    # - before the real-time can be run, the file for the stock must be checked
+    current_price, rsi, up, down = rsi_func(stock_selected, retrieve_data(stock_selected), 8)
+    print(current_price, rsi, up, down)
+
+    #graphing below
     '''
     plt.subplot(3, 1, 1)
     for data in use_data_macd(stock_selected)[2:-2]:
