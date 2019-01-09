@@ -110,7 +110,6 @@ if __name__ == "__main__":
     #nyse_is_open situation (notes below might be irrelevant)
     # - if open, then run through
     # - if closed, then check if the previously added date to csv is equal to the prev date in iextrading
-    
     stock_selected = 'CRON'
 
     #later want to check if csv exists, check if the file is up to date with the prev close as the last entry
@@ -124,22 +123,23 @@ if __name__ == "__main__":
 
     #graphing below
     '''
-    plt.subplot(3, 1, 1)
-    for data in use_data_macd(stock_selected)[2:-2]:
-        plt.plot(use_data_macd(stock_selected)[0][-14:], data[-14:])
-    plt.xticks(rotation=90)
+    if nyse_is_open() == True:
+        plt.subplot(3, 1, 1)
+        for data in use_data_macd(stock_selected)[2:-2]:
+            plt.plot(use_data_macd(stock_selected)[0][-14:], data[-14:])
+        plt.xticks(rotation=90)
 
-    plt.subplot(3, 1, 2)
-    plt.plot(use_data_macd(stock_selected)[0][-30:], use_data_macd(stock_selected)[1][-30:])
-    plt.plot(use_data_macd(stock_selected)[0][-30:], np.array([30]*len(use_data_macd(stock_selected)[0]))[-30:])
-    plt.plot(use_data_macd(stock_selected)[0][-30:], np.array([70]*len(use_data_macd(stock_selected)[0]))[-30:])
-    plt.xticks(rotation=90)
-    
-    plt.subplot(3, 1, 3)
-    for data in use_data_macd(stock_selected)[-2:]:
-        plt.plot(use_data_macd(stock_selected)[0][-30:], data[-30:])
-    plt.xticks(rotation=90)
+        plt.subplot(3, 1, 2)
+        plt.plot(use_data_macd(stock_selected)[0][-30:], use_data_macd(stock_selected)[1][-30:])
+        plt.plot(use_data_macd(stock_selected)[0][-30:], np.array([30]*len(use_data_macd(stock_selected)[0]))[-30:])
+        plt.plot(use_data_macd(stock_selected)[0][-30:], np.array([70]*len(use_data_macd(stock_selected)[0]))[-30:])
+        plt.xticks(rotation=90)
+        
+        plt.subplot(3, 1, 3)
+        for data in use_data_macd(stock_selected)[-2:]:
+            plt.plot(use_data_macd(stock_selected)[0][-30:], data[-30:])
+        plt.xticks(rotation=90)
 
-    plt.show()
+        plt.show()
     '''
     
