@@ -59,7 +59,7 @@ def rsi_func(stock, data, n=14, init=False):
         down = temp_down
         return rsi, up, down
     elif init == False:
-        current_price = Stock(stock).price()
+        current_price = Stock(stock).price() #the only use for the stock param
         delta = current_price - prices.iloc[-1]
         if delta > 0:
             upval = delta
@@ -76,17 +76,19 @@ def rsi_func(stock, data, n=14, init=False):
         #return 'string return response here'
 
 
-def ma_func(values, window):
-    weigths = np.repeat(1, window) / window
-    smas = np.convolve(values, weigths, 'valid')
-    return smas
+def ma_func(data, window, init=False):
+    if init == True:
+        weigths = np.repeat(1, window) / window
+        smas = np.convolve(data['close'], weigths, 'valid')
+        return smas
 
-def ema_func(values, window):
-    weights = np.exp(np.linspace(-1, 0, window))
-    weights /= weights.sum()
-    a =  np.convolve(values, weights, mode='full')[:len(values)]
-    a[:window] = a[window]
-    return a
+def ema_func(data, window, init=False):
+    if init == True:
+        weights = np.exp(np.linspace(-1, 0, window))
+        weights /= weights.sum()
+        a =  np.convolve(data['close'], weights, mode='full')[:len(data['close'])]
+        a[:window] = a[window]
+        return a
 
 def computeMACD(x, slow=26, fast=12):
     emaslow = ema_func(x, slow)
@@ -97,7 +99,7 @@ def computeMACD(x, slow=26, fast=12):
 
 def init_data(stock: str, range_: str) -> None: #maybe change range_ to window?
     stock_data = init_get_data(stock, range_)
-    rsi, up, down = rsi_func(stock, stock_data, 8, True)
+    rsi, up, down = rsi_func(stock_data, 8, True)
     stock_data = stock_data.assign(rsi=rsi, up=up, down=down) 
     file_name = 'data-' + stock + '.csv'
     stock_data.to_csv(file_name, index=False)
