@@ -81,6 +81,8 @@ def ma_func(data, window, init=False):
         weigths = np.repeat(1, window) / window
         smas = np.convolve(data['close'], weigths, 'valid')
         return smas
+    else:
+        data['ma'].iloc[-1] #here is the last moving average for the csv
 
 def ema_func(data, window, init=False):
     if init == True:
@@ -97,10 +99,18 @@ def computeMACD(x, slow=26, fast=12):
     sma_of_macd = ma_func(macd, 10)
     return emaslow, emafast, macd, sma_of_macd
 
-def init_data(stock: str, range_: str) -> None: #maybe change range_ to window?
+def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
     stock_data = init_get_data(stock, range_)
-    rsi, up, down = rsi_func(stock_data, 8, True)
-    stock_data = stock_data.assign(rsi=rsi, up=up, down=down) 
+    rsi, up, down = rsi_func(stock, stock_data, 8, True)
+    max_len = len(rsi)
+    stock_data = stock_data.assign(rsi=rsi, up=up, down=down)
+
+    ma_fast = ma_func(stock_data, fast, init=True) #need to make max length of data (adding zeros before)
+    ma_slow = ma_func(stock_data, slow, init=True)
+    ma_fast = np.concatenate([np.array([0]*(max_len-len(ma_fast))), ma_fast])
+    ma_slow = np.concatenate([np.array([0]*(max_len-len(ma_slow))), ma_slow])
+    stock_data = stock_data.assign(ma_fast=ma_fast, ma_slow=ma_slow)
+    
     file_name = 'data-' + stock + '.csv'
     stock_data.to_csv(file_name, index=False)
 
@@ -115,7 +125,7 @@ if __name__ == "__main__":
     stock_selected = 'CRON'
 
     #later want to check if csv exists, check if the file is up to date with the prev close as the last entry
-    init_data(stock_selected, '5y')
+    init_data(stock_selected, '5y', 13, 30)
 
     #current day data check will be below
     # - so if we put this into a while loop checking nyse_is_open, then if it becomes False, then go into "end-game mode"
