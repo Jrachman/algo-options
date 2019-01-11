@@ -81,8 +81,8 @@ def ma_func(data, window, init=False):
         weigths = np.repeat(1, window) / window
         smas = np.convolve(data['close'], weigths, 'valid')
         return smas
-    else:
-        data['ma'].iloc[-1] #here is the last moving average for the csv
+    #else:
+        #data['ma'].iloc[-1] #here is the last moving average for the csv
 
 def ema_func(data, window, init=False):
     if init == True:
@@ -91,28 +91,37 @@ def ema_func(data, window, init=False):
         a =  np.convolve(data['close'], weights, mode='full')[:len(data['close'])]
         a[:window] = a[window]
         return a
+    #else
 
-def computeMACD(x, slow=26, fast=12):
-    emaslow = ema_func(x, slow)
-    emafast = ema_func(x, fast)
-    macd = emafast - emaslow
-    sma_of_macd = ma_func(macd, 10)
-    return emaslow, emafast, macd, sma_of_macd
+def computeMACD(x, slow=26, fast=12, init=False):
+    if init == True:
+        emaslow = ema_func(x, slow, init)
+        emafast = ema_func(x, fast, init)
+        macd = emafast - emaslow
+        
+        weigths = np.repeat(1, 10) / 10
+        sma_of_macd = np.convolve(macd, weigths, 'valid')
+        sma_of_macd = np.concatenate([np.array([0]*(len(emaslow)-len(sma_of_macd))), sma_of_macd])
+        return emaslow, emafast, macd, sma_of_macd
+    #else
 
 def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
+    file_name = 'data-' + stock + '.csv'
     stock_data = init_get_data(stock, range_)
     rsi, up, down = rsi_func(stock, stock_data, 8, True)
     max_len = len(rsi)
     stock_data = stock_data.assign(rsi=rsi, up=up, down=down)
 
-    ma_fast = ma_func(stock_data, fast, init=True) #need to make max length of data (adding zeros before)
-    ma_slow = ma_func(stock_data, slow, init=True)
+    ma_fast = ma_func(stock_data, fast, True) #need to make max length of data (adding zeros before)
+    ma_slow = ma_func(stock_data, slow, True)
     ma_fast = np.concatenate([np.array([0]*(max_len-len(ma_fast))), ma_fast])
     ma_slow = np.concatenate([np.array([0]*(max_len-len(ma_slow))), ma_slow])
     stock_data = stock_data.assign(ma_fast=ma_fast, ma_slow=ma_slow)
-    
-    file_name = 'data-' + stock + '.csv'
-    stock_data.to_csv(file_name, index=False)
+
+    ema_slow, ema_fast, macd, sma_macd = computeMACD(stock_data, 30, 13, True)
+    print(ema_slow, ema_fast, macd, sma_macd)
+
+    stock_data.to_csv(file_name, False)
 
 def retrieve_data(stock: str):
     file_name = 'data-' + stock + '.csv'
