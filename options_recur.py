@@ -84,26 +84,36 @@ def ma_func(data, window, init=False):
     #else:
         #data['ma'].iloc[-1] #here is the last moving average for the csv
 
-def ema_func(data, window, init=False):
+def ema_func(stock, data, window, speed, init=False):
     if init == True:
         weights = np.exp(np.linspace(-1, 0, window))
         weights /= weights.sum()
         a =  np.convolve(data['close'], weights, mode='full')[:len(data['close'])]
         a[:window] = a[window]
         return a
-    #else
+    elif init == False:
+        if speed == 'fast':
+            prev_ema = data['ema_fast']
+        elif speed == 'slow':
+            prev_ema = data['ema_slow']
+        current_price = Stock(stock).price() #note that if it is neither of the speeds, then this part and beyond will fail
+        weight = 2 / (window +1)
+        curr_ema = (current_price - prev_ema) * weight + prev_ema
+        return curr_ema
+        
 
 def computeMACD(x, slow=26, fast=12, init=False):
     if init == True:
-        emaslow = ema_func(x, slow, init)
-        emafast = ema_func(x, fast, init)
+        emaslow = ema_func(x, slow,'slow', init)
+        emafast = ema_func(x, fast, 'fast', init)
         macd = emafast - emaslow
         
         weigths = np.repeat(1, 10) / 10
         sma_of_macd = np.convolve(macd, weigths, 'valid')
         sma_of_macd = np.concatenate([np.array([0]*(len(emaslow)-len(sma_of_macd))), sma_of_macd])
         return emaslow, emafast, macd, sma_of_macd
-    #else
+    elif init == False:
+        print('continuous!')
 
 def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
     file_name = 'data-' + stock + '.csv'
