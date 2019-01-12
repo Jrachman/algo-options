@@ -17,6 +17,10 @@ import matplotlib.pyplot as plt
 # - ema
 # - macd (through computeMACD function) -> might not need?
 
+#important links for ma and ema:
+# - https://www.investopedia.com/ask/answers/122314/what-exponential-moving-average-ema-formula-and-how-ema-calculated.asp
+# - https://en.wikipedia.org/wiki/Moving_average
+
 def nyse_is_open() -> str: #return whether or not the stock market is open right now. if it is, then continue running application; else, stop feeding data as long as market is closed
     response = requests.get("https://www.stockmarketclock.com/api-v1/status?exchange=nyse")
     return response.json()['results']['nyse']['status']
