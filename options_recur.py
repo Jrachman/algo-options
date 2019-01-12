@@ -118,10 +118,11 @@ def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe cha
     ma_slow = np.concatenate([np.array([0]*(max_len-len(ma_slow))), ma_slow])
     stock_data = stock_data.assign(ma_fast=ma_fast, ma_slow=ma_slow)
 
-    ema_slow, ema_fast, macd, sma_macd = computeMACD(stock_data, 30, 13, True)
-    print(ema_slow, ema_fast, macd, sma_macd)
+    ema_slow, ema_fast, macd, ma_macd = computeMACD(stock_data, 30, 13, True)
+    stock_data = stock_data.assign(ema_slow=ema_slow, ema_fast=ema_fast, macd=macd, ma_macd=ma_macd)
+    #print(stock_data)
 
-    stock_data.to_csv(file_name, False)
+    stock_data.to_csv(file_name)
 
 def retrieve_data(stock: str):
     file_name = 'data-' + stock + '.csv'
