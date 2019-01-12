@@ -102,18 +102,18 @@ def ema_func(stock, data, window, speed, init=False):
         return curr_ema
         
 
-def computeMACD(x, slow=26, fast=12, init=False):
+def computeMACD(stock, x, slow=26, fast=12, init=False):
+    emaslow = ema_func(stock, x, slow,'slow', init)
+    emafast = ema_func(stock, x, fast, 'fast', init)
+    macd = emafast - emaslow
     if init == True:
-        emaslow = ema_func(x, slow,'slow', init)
-        emafast = ema_func(x, fast, 'fast', init)
-        macd = emafast - emaslow
-        
         weigths = np.repeat(1, 10) / 10
         sma_of_macd = np.convolve(macd, weigths, 'valid')
         sma_of_macd = np.concatenate([np.array([0]*(len(emaslow)-len(sma_of_macd))), sma_of_macd])
         return emaslow, emafast, macd, sma_of_macd
     elif init == False:
         print('continuous!')
+        #need to add how to create new sma for continuous use
 
 def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
     file_name = 'data-' + stock + '.csv'
@@ -128,7 +128,7 @@ def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe cha
     ma_slow = np.concatenate([np.array([0]*(max_len-len(ma_slow))), ma_slow])
     stock_data = stock_data.assign(ma_fast=ma_fast, ma_slow=ma_slow)
 
-    ema_slow, ema_fast, macd, ma_macd = computeMACD(stock_data, 30, 13, True)
+    ema_slow, ema_fast, macd, ma_macd = computeMACD(stock, stock_data, 30, 13, True)
     stock_data = stock_data.assign(ema_slow=ema_slow, ema_fast=ema_fast, macd=macd, ma_macd=ma_macd)
     #print(stock_data)
 
@@ -150,8 +150,12 @@ if __name__ == "__main__":
     #current day data check will be below
     # - so if we put this into a while loop checking nyse_is_open, then if it becomes False, then go into "end-game mode"
     # - before the real-time can be run, the file for the stock must be checked
-    current_price, rsi, up, down = rsi_func(stock_selected, retrieve_data(stock_selected), 8)
+    curr_data = retrieve_data(stock_selected)
+    current_price, rsi, up, down = rsi_func(stock_selected, curr_data, 8)
     print(current_price, rsi, up, down)
+
+    emaslow, emafast, macd, sma_of_macd = computeMACD(stock_selected, curr_data, 30, 13)
+    print(emaslow, emafast, macd, sma_of_macd)
 
     #graphing below
     '''
