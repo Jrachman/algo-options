@@ -76,7 +76,7 @@ def rsi_func(stock, data, n=14, init=False):
         #return 'string return response here'
 
 
-def ma_func(data, window, init=False):
+def ma_func(data, window, init=False): #next_ma = prev_ma + (current_price / window) - (price_window_days_ago / window)
     if init == True:
         weigths = np.repeat(1, window) / window
         smas = np.convolve(data['close'], weigths, 'valid')
