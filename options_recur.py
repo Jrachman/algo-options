@@ -1,7 +1,7 @@
-import json
+#import json
 import requests
-import urllib3
-import bs4 as bs
+#import urllib3
+#import bs4 as bs
 import numpy as np
 import pandas as pd
 from iex import Stock
