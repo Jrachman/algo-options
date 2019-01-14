@@ -14,6 +14,14 @@ import matplotlib.pyplot as plt
 # - clean up (spaghetti) code
 # - compile realtime data into single dataframe row to mesh with plot
 
+#what graphs are needed:
+#  graph #1:
+#    - stock price
+#  graph #2:
+#    - rsi
+#    - upper-limit line
+#    - lower-limit line
+
 #what needs to be saved for specific day:
 # - date
 # - closing price
@@ -203,4 +211,3 @@ if __name__ == "__main__":
 
         plt.show()
     '''
-    
