@@ -17,10 +17,15 @@ import matplotlib.pyplot as plt
 #what graphs are needed:
 #  graph #1:
 #    - stock price
+#    - slow ema
+#    - fast ema
 #  graph #2:
 #    - rsi
-#    - upper-limit line
-#    - lower-limit line
+#    - upper-limit line (70 or 80)
+#    - lower-limit line (30 or 20)
+#  graph #3:
+#    - macd
+#    - ma of macd
 
 #what needs to be saved for specific day:
 # - date
