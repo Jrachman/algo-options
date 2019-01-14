@@ -80,13 +80,18 @@ def rsi_func(stock, data, n=14, init=False):
         #return 'string return response here'
 
 
-def ma_func(data, window, init=False): #next_ma = prev_ma + (current_price / window) - (price_window_days_ago / window)
+def ma_func(stock, data, window, init=False): #next_ma = prev_ma + (current_price / window) - (price_window_days_ago / window)
     if init == True:
         weigths = np.repeat(1, window) / window
         smas = np.convolve(data['close'], weigths, 'valid')
         return smas
-    #else:
-        #data['ma'].iloc[-1] #here is the last moving average for the csv
+    elif init == False:
+        current_price = Stock(stock).price()
+        prev_ma = data['ma_macd'].iloc[-1] #here is the last moving average for the csv
+        top_window_ma = data['ma_macd'].iloc[-window]
+        curr_ma = prev_ma + (current_price / window) - (top_window_ma / window)
+        #print('curr_ma', curr_ma)
+        return curr_ma
 
 def ema_func(stock, data, window, speed, init=False):
     if init == True:
@@ -97,12 +102,13 @@ def ema_func(stock, data, window, speed, init=False):
         return a
     elif init == False:
         if speed == 'fast':
-            prev_ema = data['ema_fast']
+            prev_ema = data['ema_fast'].iloc[-1]
         elif speed == 'slow':
-            prev_ema = data['ema_slow']
+            prev_ema = data['ema_slow'].iloc[-1]
         current_price = Stock(stock).price() #note that if it is neither of the speeds, then this part and beyond will fail
-        weight = 2 / (window +1)
+        weight = 2 / (window + 1)
         curr_ema = (current_price - prev_ema) * weight + prev_ema
+        #print('curr_ema', speed, curr_ema)
         return curr_ema
         
 
@@ -116,8 +122,14 @@ def computeMACD(stock, x, slow=26, fast=12, init=False):
         sma_of_macd = np.concatenate([np.array([0]*(len(emaslow)-len(sma_of_macd))), sma_of_macd])
         return emaslow, emafast, macd, sma_of_macd
     elif init == False:
-        print('continuous!')
-        #need to add how to create new sma for continuous use
+        #what needs to be done:
+        # - find emaslow and emafast using ema_func
+        # - compute macd by diff between emaslow and emafast
+        # - find sma_of_macd using ma_func
+        sma_of_macd = ma_func(stock, x, 10)
+        #print(sma_of_macd)
+        return emaslow, emafast, macd, sma_of_macd
+
 
 def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
     file_name = 'data-' + stock + '.csv'
@@ -126,8 +138,8 @@ def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe cha
     max_len = len(rsi)
     stock_data = stock_data.assign(rsi=rsi, up=up, down=down)
 
-    ma_fast = ma_func(stock_data, fast, True) #need to make max length of data (adding zeros before)
-    ma_slow = ma_func(stock_data, slow, True)
+    ma_fast = ma_func(stock, stock_data, fast, True) #need to make max length of data (adding zeros before)
+    ma_slow = ma_func(stock, stock_data, slow, True)
     ma_fast = np.concatenate([np.array([0]*(max_len-len(ma_fast))), ma_fast])
     ma_slow = np.concatenate([np.array([0]*(max_len-len(ma_slow))), ma_slow])
     stock_data = stock_data.assign(ma_fast=ma_fast, ma_slow=ma_slow)
@@ -156,10 +168,10 @@ if __name__ == "__main__":
     # - before the real-time can be run, the file for the stock must be checked
     curr_data = retrieve_data(stock_selected)
     current_price, rsi, up, down = rsi_func(stock_selected, curr_data, 8)
-    print(current_price, rsi, up, down)
+    #print(current_price, rsi, up, down)
 
     emaslow, emafast, macd, sma_of_macd = computeMACD(stock_selected, curr_data, 30, 13)
-    print(emaslow, emafast, macd, sma_of_macd)
+    #print(emaslow, emafast, macd, sma_of_macd)
 
     #graphing below
     '''
