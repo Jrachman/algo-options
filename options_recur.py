@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from iex import Stock
 import matplotlib.pyplot as plt
+from datetime import date
 
 #to do list:
 # - bring back graphing on matplotlib
@@ -194,6 +195,8 @@ if __name__ == "__main__":
     #print(emaslow, emafast, macd, sma_of_macd)
 
     #compile realtime data here
+    today = str(date.today())
+    print(today)
 
     #graphing below
     '''
