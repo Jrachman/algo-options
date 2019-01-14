@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 # - figure out how to display graphs on a webpage
 # - figure out how to alert for indicators
 # - clean up (spaghetti) code
+# - compile realtime data into single dataframe row to mesh with plot
 
 #what needs to be saved for specific day:
 # - date
@@ -178,6 +179,8 @@ if __name__ == "__main__":
 
     emaslow, emafast, macd, sma_of_macd = computeMACD(stock_selected, curr_data, 30, 13)
     #print(emaslow, emafast, macd, sma_of_macd)
+
+    #compile realtime data here
 
     #graphing below
     '''
