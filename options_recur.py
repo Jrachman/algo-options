@@ -7,6 +7,12 @@ import pandas as pd
 from iex import Stock
 import matplotlib.pyplot as plt
 
+#to do list:
+# - bring back graphing on matplotlib
+# - figure out how to display graphs on a webpage
+# - figure out how to alert for indicators
+# - clean up (spaghetti) code
+
 #what needs to be saved for specific day:
 # - date
 # - closing price
