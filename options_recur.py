@@ -7,6 +7,7 @@ import pandas as pd
 from iex import Stock
 import matplotlib.pyplot as plt
 from datetime import date
+import pygal
 
 #to do list:
 # - bring back graphing on matplotlib
