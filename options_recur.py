@@ -9,13 +9,6 @@ import matplotlib.pyplot as plt
 from datetime import date
 import pygal
 
-#to do list:
-# - bring back graphing on matplotlib
-# - figure out how to display graphs on a webpage
-# - figure out how to alert for indicators
-# - clean up (spaghetti) code
-# - compile realtime data into single dataframe row to mesh with plot
-
 #what graphs are needed:
 #  graph #1:
 #    - stock price
