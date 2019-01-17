@@ -190,49 +190,36 @@ if __name__ == "__main__":
     # - before the real-time can be run, the file for the stock must be checked
     curr_data = retrieve_data(stock_selected)
     current_price, rsi, up, down = rsi_func(stock_selected, curr_data, 8)
-    #print(current_price, rsi, up, down)
-
     emaslow, emafast, macd, sma_of_macd = computeMACD(stock_selected, curr_data, 30, 13)
-    #print(emaslow, emafast, macd, sma_of_macd)
-
-    #compile realtime data here
-    today = str(date.today())
-    #print(today)
-
-
-    #graphing below
-    # what graphs are needed:
-    #  graph #1:
-    #    - stock price
-    #    - slow ema
-    #    - fast ema
-    #  graph #2:
-    #    - rsi
-    #    - upper-limit line (70 or 80)
-    #    - lower-limit line (30 or 20)
-    #  graph #3:
-    #    - macd
-    #    - ma of macd
-
-    stock_data = retrieve_data(stock_selected)
-    print(stock_data)
 
     #pygal graphing
-    line_chart = pygal.Line()
-    line_chart.title = 'Stock Price with EMA'
-    line_chart.x_labels = stock_data['date'][-30:]
-    line_chart.add('close', stock_data['close'][-30:])
-    line_chart.add('ema_slow', stock_data['ema_slow'][-30:])
-    line_chart.add('ema_fast', stock_data['ema_fast'][-30:])
-    line_chart.render_in_browser()
+    stock_data = retrieve_data(stock_selected)
 
-    line_chart = pygal.Line()
-    line_chart.title = 'RSI Threshold'
-    line_chart.x_labels = stock_data['date'][-30:]
-    line_chart.add('rsi', stock_data['rsi'][-30:])
-    line_chart.add('upper_limit', np.array([70]*len(stock_data['date'][-30:])))
-    line_chart.add('lower_limit', np.array([30]*len(stock_data['date'][-30:])))
-    line_chart.render_in_browser()
+    if nyse_is_open() != False:
+        today = str(date.today())
+
+        line_chart = pygal.Line()
+        line_chart.title = 'Stock Price with EMA'
+        line_chart.x_labels = stock_data['date'][-60:]
+        line_chart.add('close', stock_data['close'][-60:])
+        line_chart.add('ema_slow', stock_data['ema_slow'][-60:])
+        line_chart.add('ema_fast', stock_data['ema_fast'][-60:])
+        line_chart.render_in_browser()
+
+        line_chart = pygal.Line()
+        line_chart.title = 'RSI Threshold'
+        line_chart.x_labels = stock_data['date'][-60:]
+        line_chart.add('rsi', stock_data['rsi'][-60:])
+        line_chart.add('upper_limit', np.array([70]*len(stock_data['date'][-60:])))
+        line_chart.add('lower_limit', np.array([30]*len(stock_data['date'][-60:])))
+        line_chart.render_in_browser()
+
+        line_chart = pygal.Line()
+        line_chart.title = 'MACD'
+        line_chart.x_labels = stock_data['date'][-60:]
+        line_chart.add('macd', stock_data['macd'][-60:])
+        line_chart.add('ma_macd', stock_data['ma_macd'][-60:])
+        line_chart.render_in_browser()
 
     #matplotlib graphing
     '''
