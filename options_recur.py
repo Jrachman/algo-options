@@ -127,10 +127,11 @@ def ema_func(stock, data, window, speed, init=False):
             prev_ema = data['ema_fast'].iloc[-1]
         elif speed == 'slow':
             prev_ema = data['ema_slow'].iloc[-1]
+        elif speed == 'ema_macd':
+            prev_ema = data['ema_macd'].iloc[-1]
         current_price = Stock(stock).price() #note that if it is neither of the speeds, then this part and beyond will fail
         weight = 2 / (window + 1)
         curr_ema = (current_price - prev_ema) * weight + prev_ema
-        #print('curr_ema', speed, curr_ema)
         return curr_ema
         
 
@@ -139,18 +140,13 @@ def computeMACD(stock, x, slow=26, fast=12, init=False):
     emafast = ema_func(stock, x, fast, 'fast', init)
     macd = emafast - emaslow
     if init == True:
-        weigths = np.repeat(1, 10) / 10
-        sma_of_macd = np.convolve(macd, weigths, 'valid')
-        sma_of_macd = np.concatenate([np.array([0]*(len(emaslow)-len(sma_of_macd))), sma_of_macd])
-        return emaslow, emafast, macd, sma_of_macd
+        weigths = np.repeat(1, 9) / 9
+        ema_of_macd = np.convolve(macd, weigths, 'valid')
+        ema_of_macd = np.concatenate([np.array([0]*(len(emaslow)-len(ema_of_macd))), ema_of_macd])
+        return emaslow, emafast, macd, ema_of_macd
     elif init == False:
-        #what needs to be done:
-        # - find emaslow and emafast using ema_func
-        # - compute macd by diff between emaslow and emafast
-        # - find sma_of_macd using ma_func
-        sma_of_macd = ma_func(stock, x, 10)
-        #print(sma_of_macd)
-        return emaslow, emafast, macd, sma_of_macd
+        ema_of_macd = ema_func(stock, x, 9, 'ema_macd')
+        return emaslow, emafast, macd, ema_of_macd
 
 
 def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
@@ -166,8 +162,8 @@ def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe cha
     ma_slow = np.concatenate([np.array([0]*(max_len-len(ma_slow))), ma_slow])
     stock_data = stock_data.assign(ma_fast=ma_fast, ma_slow=ma_slow)
 
-    ema_slow, ema_fast, macd, ma_macd = computeMACD(stock, stock_data, 30, 13, True)
-    stock_data = stock_data.assign(ema_slow=ema_slow, ema_fast=ema_fast, macd=macd, ma_macd=ma_macd)
+    ema_slow, ema_fast, macd, ema_macd = computeMACD(stock, stock_data, 30, 13, True)
+    stock_data = stock_data.assign(ema_slow=ema_slow, ema_fast=ema_fast, macd=macd, ema_macd=ema_macd)
     #print(stock_data)
 
     stock_data.to_csv(file_name)
@@ -189,8 +185,8 @@ if __name__ == "__main__":
     # - so if we put this into a while loop checking nyse_is_open, then if it becomes False, then go into "end-game mode"
     # - before the real-time can be run, the file for the stock must be checked
     curr_data = retrieve_data(stock_selected)
-    current_price, rsi, up, down = rsi_func(stock_selected, curr_data, 8)
-    emaslow, emafast, macd, sma_of_macd = computeMACD(stock_selected, curr_data, 30, 13)
+    current_price, rsi, up, down = rsi_func(stock_selected, curr_data, 14)
+    emaslow, emafast, macd, ema_of_macd = computeMACD(stock_selected, curr_data, 30, 13)
 
     #pygal graphing
     stock_data = retrieve_data(stock_selected)
