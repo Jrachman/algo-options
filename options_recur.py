@@ -214,7 +214,7 @@ if __name__ == "__main__":
         line_chart.title = 'MACD'
         line_chart.x_labels = stock_data['date'][-60:]
         line_chart.add('macd', stock_data['macd'][-60:])
-        line_chart.add('ma_macd', stock_data['ma_macd'][-60:])
+        line_chart.add('ema_macd', stock_data['ema_macd'][-60:])
         line_chart.render_in_browser()
 
     #matplotlib graphing
