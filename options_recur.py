@@ -172,7 +172,7 @@ def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe cha
 
     stock_data.to_csv(file_name)
 
-def retrieve_data(stock: str):
+def retrieve_data(stock: str): #might need to take into consideration that the file does not exist
     file_name = 'data-' + stock + '.csv'
     return pd.read_csv(file_name)
 
@@ -197,18 +197,41 @@ if __name__ == "__main__":
 
     #compile realtime data here
     today = str(date.today())
-    print(today)
+    #print(today)
+
 
     #graphing below
+    # what graphs are needed:
+    #  graph #1:
+    #    - stock price
+    #    - slow ema
+    #    - fast ema
+    #  graph #2:
+    #    - rsi
+    #    - upper-limit line (70 or 80)
+    #    - lower-limit line (30 or 20)
+    #  graph #3:
+    #    - macd
+    #    - ma of macd
+
+    stock_data = retrieve_data(stock_selected)
+    print(stock_data)
 
     #pygal graphing
     line_chart = pygal.Line()
-    line_chart.title = 'Browser usage evolution (in %)'
-    line_chart.x_labels = map(str, range(2002, 2013))
-    line_chart.add('Firefox', [None, None, 0, 16.6, 25, 31, 36.4, 45.5, 46.3, 42.8, 37.1])
-    line_chart.add('Chrome', [None, None, None, None, None, None, 0, 3.9, 10.8, 23.8, 35.3])
-    line_chart.add('IE', [85.8, 84.6, 84.7, 74.5, 66, 58.6, 54.7, 44.8, 36.2, 26.6, 20.1])
-    line_chart.add('Others', [14.2, 15.4, 15.3, 8.9, 9, 10.4, 8.9, 5.8, 6.7, 6.8, 7.5])
+    line_chart.title = 'Stock Price with EMA'
+    line_chart.x_labels = stock_data['date'][-30:]
+    line_chart.add('close', stock_data['close'][-30:])
+    line_chart.add('ema_slow', stock_data['ema_slow'][-30:])
+    line_chart.add('ema_fast', stock_data['ema_fast'][-30:])
+    line_chart.render_in_browser()
+
+    line_chart = pygal.Line()
+    line_chart.title = 'RSI Threshold'
+    line_chart.x_labels = stock_data['date'][-30:]
+    line_chart.add('rsi', stock_data['rsi'][-30:])
+    line_chart.add('upper_limit', np.array([70]*len(stock_data['date'][-30:])))
+    line_chart.add('lower_limit', np.array([30]*len(stock_data['date'][-30:])))
     line_chart.render_in_browser()
 
     #matplotlib graphing
