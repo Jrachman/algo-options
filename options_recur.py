@@ -176,14 +176,16 @@ if __name__ == "__main__":
     #nyse_is_open situation (notes below might be irrelevant)
     # - if open, then run through
     # - if closed, then check if the previously added date to csv is equal to the prev date in iextrading
-    stock_selected = 'CRON'
 
-    #later want to check if csv exists, check if the file is up to date with the prev close as the last entry
-    init_data(stock_selected, '5y', 13, 30)
+    # later want to check if csv exists, check if the file is up to date with the prev close as the last entry
 
     #current day data check will be below
     # - so if we put this into a while loop checking nyse_is_open, then if it becomes False, then go into "end-game mode"
     # - before the real-time can be run, the file for the stock must be checked
+
+    stock_selected = 'CRON'
+    init_data(stock_selected, '5y', 13, 30)
+
     curr_data = retrieve_data(stock_selected)
     current_price, rsi, up, down = rsi_func(stock_selected, curr_data, 14)
     emaslow, emafast, macd, ema_of_macd = computeMACD(stock_selected, curr_data, 30, 13)
