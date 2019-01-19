@@ -22,6 +22,7 @@ import pygal
 #    - macd
 #    - ma of macd
 
+
 #what needs to be saved for specific day:
 # - date
 # - closing price
@@ -31,6 +32,7 @@ import pygal
 # - sma
 # - ema
 # - macd (through computeMACD function) -> might not need?
+
 
 #important links for ma and ema:
 # - https://www.investopedia.com/ask/answers/122314/what-exponential-moving-average-ema-formula-and-how-ema-calculated.asp
