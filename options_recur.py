@@ -105,7 +105,6 @@ def ma_func(stock, data, window, init=False): #next_ma = prev_ma + (current_pric
         prev_ma = data['ma_macd'].iloc[-1] #here is the last moving average for the csv
         top_window_ma = data['ma_macd'].iloc[-window]
         curr_ma = prev_ma + (current_price / window) - (top_window_ma / window)
-        #print('curr_ma', curr_ma)
         return curr_ma
 
 def ema_func(stock, data, window, speed, init=False):
