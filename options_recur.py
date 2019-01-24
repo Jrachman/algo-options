@@ -168,6 +168,7 @@ def retrieve_data(stock: str): #might need to take into consideration that the f
     return pd.read_csv(file_name)
 
 if __name__ == "__main__":
+
     #nyse_is_open situation (notes below might be irrelevant)
     # - if open, then run through
     # - if closed, then check if the previously added date to csv is equal to the prev date in iextrading
