@@ -21,6 +21,7 @@ import pygal
 #  graph #3:
 #    - macd
 #    - ma of macd
+
 #what needs to be saved for specific day:
 # - date
 # - closing price
