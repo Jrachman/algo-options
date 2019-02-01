@@ -209,25 +209,3 @@ if __name__ == "__main__":
         line_chart.add('macd', stock_data['macd'][-60:])
         line_chart.add('ema_macd', stock_data['ema_macd'][-60:])
         line_chart.render_in_browser()
-
-    #matplotlib graphing
-    '''
-    if nyse_is_open() == True:
-        plt.subplot(3, 1, 1)
-        for data in use_data_macd(stock_selected)[2:-2]:
-            plt.plot(use_data_macd(stock_selected)[0][-14:], data[-14:])
-        plt.xticks(rotation=90)
-
-        plt.subplot(3, 1, 2)
-        plt.plot(use_data_macd(stock_selected)[0][-30:], use_data_macd(stock_selected)[1][-30:])
-        plt.plot(use_data_macd(stock_selected)[0][-30:], np.array([30]*len(use_data_macd(stock_selected)[0]))[-30:])
-        plt.plot(use_data_macd(stock_selected)[0][-30:], np.array([70]*len(use_data_macd(stock_selected)[0]))[-30:])
-        plt.xticks(rotation=90)
-        
-        plt.subplot(3, 1, 3)
-        for data in use_data_macd(stock_selected)[-2:]:
-            plt.plot(use_data_macd(stock_selected)[0][-30:], data[-30:])
-        plt.xticks(rotation=90)
-
-        plt.show()
-    '''
