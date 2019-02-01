@@ -5,7 +5,7 @@ import requests
 import numpy as np
 import pandas as pd
 from iex import Stock
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from datetime import date
 import pygal
 
