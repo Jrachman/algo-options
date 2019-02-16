@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 # - look for overvaluation then 13/30 crossover and 200 ma safety
 # - the farther 13/30 is above the 200 ma, the more room there is to correct
 # - let yourself fail but don't lose more than 50% (stop 50% less than what you want to gain)
-# - 2 or 4 week window foxr buying options (if you think move is going to happen in 2 weeks, buy for 4 weeks)
+# - 2 or 4 week window for buying options (if you think move is going to happen in 2 weeks, buy for 4 weeks)
 # - rsi over 80 means overbought
 # - rsi under 20 means oversold
 
