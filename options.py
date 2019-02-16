@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 # - rsi under 20 means oversold
 
 #need to do:
-# - create funct for the current trading day and checking the current close and calculating
+# - create function for the current trading day and checking the current close and calculating
 # - create global for opening csv files given stock
 
 def sp500_tickers() -> [str]:
