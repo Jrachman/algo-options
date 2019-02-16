@@ -160,8 +160,6 @@ def current_day_calc(stock, n=14): #STILL IN THE WORKS!; would add nyse_is_open 
     #print(emas)
     return current_price, up, down, rsi, emas
 
-
-
 def use_data_macd(stock):
     file_name = 'data-' + stock + '.csv'
     data = pd.read_csv(file_name)
