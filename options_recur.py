@@ -142,7 +142,7 @@ def computeMACD(stock, x, slow=26, fast=12, init=False):
 def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
     file_name = 'data-' + stock + '.csv'
     stock_data = init_get_data(stock, range_)
-    rsi, up, down = rsi_func(stock, stock_data, 8, True)
+    rsi, up, down = rsi_func(stock, stock_data, 7, True)
     max_len = len(rsi)
     stock_data = stock_data.assign(rsi=rsi, up=up, down=down)
 
