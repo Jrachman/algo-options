@@ -174,7 +174,7 @@ if __name__ == "__main__":
     # - so if we put this into a while loop checking nyse_is_open, then if it becomes False, then go into "end-game mode"
     # - before the real-time can be run, the file for the stock must be checked
 
-    stock_selected = 'CRON'
+    stock_selected = 'SPOT'
     init_data(stock_selected, '5y', 13, 30)
 
     curr_data = retrieve_data(stock_selected)
