@@ -95,10 +95,11 @@ nav {
 	border-radius: 5px;
 }
 
-.card img{
+.card img {
 	/*TODO (11): Fill in the stylistic components for the card image */
-	height: 100%;
-	width: 100%;
+	scale: 200%;
+	/* height: 100%;
+	width: 100%; */
 	border-radius: 20px;
 	box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
 }
@@ -170,7 +171,7 @@ i {
 .card img:hover{
 	/* Show if enough time */
 	animation-name: card-hover;
-	animation-duration: 1s;
+	animation-duration: 0.25s;
 	animation-fill-mode: forwards;
 }
 
