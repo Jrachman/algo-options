@@ -1,0 +1,236 @@
+/* Default Styling(code and explain) */
+html, body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	font-family: Inter UI,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+	color: #A9A9A9;
+}
+
+#navbar {
+	/* TODO (7): Fill in styles for the overall navbar element */
+	display: flex;
+	flex-direction: row;
+	box-shadow: 0px 0px 48px -11px rgba(0,0,0,0.75);
+	justify-content: space-between;
+	margin: 20px 25px;
+	padding: 20px 25px;
+	min-width: 400px;
+	max-height: 100px;
+}
+
+nav {
+	/* TODO (8): Fill in styles of the nav element */
+	list-style: none;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+/* No need to code this. Just explain what this block does */
+#navbar a {
+	text-decoration: none;
+	color: #A9A9A9;
+}
+
+#navbar nav a {
+	font-size: 1.2rem;
+	text-decoration: underline;
+}
+
+/* No need to code this. Just explain what this block does */
+#navbar-header {
+	font-weight:normal;
+	font-size: 2rem;
+	margin: 0;
+}
+
+#navbar li {
+	/* TODO (9): Fill in styles of the #navbar list elements */
+	margin-left: 10px;
+}
+
+.cards {
+	/* TODO (14): Fill in styles for the "cards" div and explain the flex direction and wrap properties */
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	padding-bottom: 20px;
+	justify-content: center;
+}
+
+.card {
+	/*TODO (10): Fill in styles for the specific card element and learn about relative layouts */
+	position: relative;
+	padding:15px;
+	width: 30%;
+	min-width: 250px;
+	max-height: 250px;
+}
+
+.bottom-right {
+	/* TODO (12): Fill in the style for the bottom right card text and explain an absolute layout */
+	position: absolute;
+	bottom: 13px;
+	right: 12px;
+	background: black;
+	color: white;
+	opacity: 0;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+.top-left {
+	/* TODO (13): Fill in the style for the top left card text and explain an absolute layout */
+	position: absolute;
+	background: black;
+	color: white;
+	top: 13px;
+	left: 12px;
+	opacity: 0;
+	font-size: 1.2rem;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.card img{
+	/*TODO (11): Fill in the stylistic components for the card image */
+	height: 100%;
+	width: 100%;
+	border-radius: 20px;
+	box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
+}
+
+/* show how to do this */
+.cards-title {
+	padding: 35px 10px;
+	text-align: center;
+	font-weight: 500;
+	font-size: 2.3rem;
+}
+
+/* TODO(16): Create footer styling */
+/* EXAMPLE CODE FOR FOOTER */
+.gallery-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #A9A9A9;
+	min-height: 100px;
+	text-align: center;
+	padding:  5px 20px;
+	color: white;
+}
+
+i {
+	font-size: 2.3rem;
+	margin-left: 20px;
+}
+
+
+/* typing animation */
+.cards-title-animation {
+	display: inline-block;
+	animation: typing 4s steps(18);
+	overflow:hidden;
+	white-space: nowrap;
+	border-right: 4px transparent #A9A9A9;
+}
+
+/* No need to code this. Just explain what this block does */
+.card img:hover ~ .show-text{
+	animation: author-show 0.6s linear 0.1s;
+	animation-fill-mode: forwards;
+}
+
+/* show title and author animation*/
+@keyframes author-show {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 0.7;
+	}
+}
+
+@keyframes typing {
+	0% {
+		width: 0ch;
+		border-right: 4px solid #A9A9A9;
+	}
+	100% {
+		width: 18ch;
+		border-right: 4px solid #A9A9A9;
+	}
+}
+
+/* increase size of hovered card animation */
+.card img:hover{
+	/* Show if enough time */
+	animation-name: card-hover;
+	animation-duration: 1s;
+	animation-fill-mode: forwards;
+}
+
+/* No need to code this. Just explain what this block does */
+ @keyframes card-hover {
+    from {
+		box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
+		transform: scale(1);
+	}
+    to {
+		box-shadow: 10px 10px 30px 0px rgba(0,0,0,0.75);
+		transform: scale(1.01);
+	}
+}
+
+/* Responsive */
+/* Portrait */
+@media (max-device-width: 667px)
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) {
+
+	#navbar{
+		margin: 10px 13px;
+		padding: 10px 13px;
+		min-width: 200px;
+		max-height: 50px;
+	}
+
+	.cards-title {
+		font-size: 1.4rem;
+	}
+
+	#navbar li {
+		font-size: 0.8rem;
+		margin-left: 10px;
+	}
+
+	#navbar-header {
+		font-size: 1.4rem;
+	}
+
+	.gallery-footer {
+		justify-content: space-between;
+		background: #A9A9A9;
+		min-height: 100px;
+		text-align: center;
+		padding:  5px 20px;
+		color: white;
+	}
+}
+
+/* Portrait */
+@media (max-device-width: 568px)
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) {
+	.cards-title {
+		font-size: 1.1rem;
+	}
+	.gallery-footer {
+		flex-direction: column;
+		justify-content: space-around; 
+	}
+}

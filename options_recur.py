@@ -140,7 +140,7 @@ def computeMACD(stock, x, slow=26, fast=12, init=False):
         return emaslow, emafast, macd, ema_of_macd
 
 def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
-    file_name = 'data-' + stock + '.csv'
+    file_name = './data/data-' + stock + '.csv'
     stock_data = init_get_data(stock, range_)
     rsi, up, down = rsi_func(stock, stock_data, 7, True)
     max_len = len(rsi)
@@ -159,7 +159,7 @@ def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe cha
     stock_data.to_csv(file_name)
 
 def retrieve_data(stock: str): #might need to take into consideration that the file does not exist
-    file_name = 'data-' + stock + '.csv'
+    file_name = './data/data-' + stock + '.csv'
     return pd.read_csv(file_name)
 
 if __name__ == "__main__":
@@ -174,6 +174,7 @@ if __name__ == "__main__":
     # - so if we put this into a while loop checking nyse_is_open, then if it becomes False, then go into "end-game mode"
     # - before the real-time can be run, the file for the stock must be checked
 
+    #TO BE FIXED WITH ENTRY AND REQUEST SYSTEM
     stock_selected = 'SPOT'
     init_data(stock_selected, '5y', 13, 30)
 
@@ -193,7 +194,7 @@ if __name__ == "__main__":
         line_chart.add('close', stock_data['close'][-60:])
         line_chart.add('ema_slow', stock_data['ema_slow'][-60:])
         line_chart.add('ema_fast', stock_data['ema_fast'][-60:])
-        line_chart.render_in_browser()
+        line_chart.render_to_file('./assets/svg/chart_stock_price.svg')
 
         line_chart = pygal.Line()
         line_chart.title = 'RSI Threshold'
@@ -201,11 +202,11 @@ if __name__ == "__main__":
         line_chart.add('rsi', stock_data['rsi'][-60:])
         line_chart.add('upper_limit', np.array([70]*len(stock_data['date'][-60:])))
         line_chart.add('lower_limit', np.array([30]*len(stock_data['date'][-60:])))
-        line_chart.render_in_browser()
+        line_chart.render_to_file('./assets/svg/chart_rsi.svg')
 
         line_chart = pygal.Line()
         line_chart.title = 'MACD'
         line_chart.x_labels = stock_data['date'][-60:]
         line_chart.add('macd', stock_data['macd'][-60:])
         line_chart.add('ema_macd', stock_data['ema_macd'][-60:])
-        line_chart.render_in_browser()
+        line_chart.render_to_file('./assets/svg/chart_macd.svg')
