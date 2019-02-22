@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76f7e153-2c21-4cf7-ac88-e5698d1a3f81" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/svg/chart_macd.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/svg/chart_macd.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/svg/chart_rsi.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/svg/chart_rsi.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/svg/chart_stock_price.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/svg/chart_stock_price.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/options_recur.py" beforeDir="false" afterPath="$PROJECT_DIR$/options_recur.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,8 +28,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/options_recur.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="165" column="78" selection-start-line="165" selection-start-column="78" selection-end-line="165" selection-end-column="78" />
+            <state relative-caret-position="419">
+              <caret line="211" column="60" selection-start-line="211" selection-start-column="60" selection-end-line="211" selection-end-column="60" />
             </state>
           </provider>
         </entry>
@@ -155,8 +159,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/options_recur.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="165" column="78" selection-start-line="165" selection-start-column="78" selection-end-line="165" selection-end-column="78" />
+        <state relative-caret-position="419">
+          <caret line="211" column="60" selection-start-line="211" selection-start-column="60" selection-end-line="211" selection-end-column="60" />
         </state>
       </provider>
     </entry>

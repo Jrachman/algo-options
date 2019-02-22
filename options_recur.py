@@ -204,18 +204,21 @@ if __name__ == "__main__":
 
         line_chart = pygal.Line()
         line_chart.title = 'Stock Price with EMA'
-        line_chart.x_labels = stock_data['date'][-60:]
-        line_chart.add('close', stock_data['close'][-60:])
-        line_chart.add('ema_slow', stock_data['ema_slow'][-60:])
-        line_chart.add('ema_fast', stock_data['ema_fast'][-60:])
+        line_chart.x_labels = stock_data['date'][-40:]
+        line_chart.add('close', stock_data['close'][-40:])
+        line_chart.add('ema_fast', stock_data['ema_fast'][-40:])
+        line_chart.add('ema_slow', stock_data['ema_slow'][-40:])
+        #line_chart.add('ma_fast', stock_data['ma_fast'][-40:])
+        #line_chart.add('ma_slow', stock_data['ma_slow'][-40:])
+        line_chart.add('ma_200', stock_data['ma_200'][-40:])
         line_chart.render_to_file('./assets/svg/chart_stock_price.svg')
 
         line_chart = pygal.Line()
         line_chart.title = 'RSI Threshold'
-        line_chart.x_labels = stock_data['date'][-60:]
-        line_chart.add('rsi', stock_data['rsi'][-60:])
-        line_chart.add('upper_limit', np.array([70]*len(stock_data['date'][-60:])))
-        line_chart.add('lower_limit', np.array([30]*len(stock_data['date'][-60:])))
+        line_chart.x_labels = stock_data['date'][-45:]
+        line_chart.add('rsi', stock_data['rsi'][-45:])
+        line_chart.add('upper_limit', np.array([70]*len(stock_data['date'][-45:])))
+        line_chart.add('lower_limit', np.array([30]*len(stock_data['date'][-45:])))
         line_chart.render_to_file('./assets/svg/chart_rsi.svg')
 
         line_chart = pygal.Line()
