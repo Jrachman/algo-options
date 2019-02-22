@@ -36,6 +36,18 @@ import pygal
 # - https://www.investopedia.com/ask/answers/122314/what-exponential-moving-average-ema-formula-and-how-ema-calculated.asp
 # - https://en.wikipedia.org/wiki/Moving_average
 
+#jeff bishop seminar notes:
+# - 13 hourly ma and 30 hourly ma
+# - 200 hourly ma is support (lock in when 13 and 30 goes down to 200)
+# - take half at 100% then you cannot lose and you just let the other half run
+# - don’t sell yourself short; let the chart run
+# - look for overvaluation then 13/30 crossover and 200 ma safety
+# - the farther 13/30 is above the 200 ma, the more room there is to correct
+# - let yourself fail but don't lose more than 50% (stop 50% less than what you want to gain)
+# - 2 or 4 week window for buying options (if you think move is going to happen in 2 weeks, buy for 4 weeks)
+# - rsi over 80 means overbought
+# - rsi under 20 means oversold
+
 def nyse_is_open() -> str: #return whether or not the stock market is open right now. if it is, then continue running application; else, stop feeding data as long as market is closed
     response = requests.get("https://www.stockmarketclock.com/api-v1/status?exchange=nyse")
     return response.json()['results']['nyse']['status']
@@ -148,9 +160,11 @@ def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe cha
 
     ma_fast = ma_func(stock, stock_data, fast, True) #need to make max length of data (adding zeros before)
     ma_slow = ma_func(stock, stock_data, slow, True)
+    ma_200 = ma_func(stock, stock_data, 200, True)
     ma_fast = np.concatenate([np.array([0]*(max_len-len(ma_fast))), ma_fast])
     ma_slow = np.concatenate([np.array([0]*(max_len-len(ma_slow))), ma_slow])
-    stock_data = stock_data.assign(ma_fast=ma_fast, ma_slow=ma_slow)
+    ma_200 = np.concatenate([np.array([0] * (max_len - len(ma_200))), ma_200])
+    stock_data = stock_data.assign(ma_fast=ma_fast, ma_slow=ma_slow, ma_200 = ma_200)
 
     ema_slow, ema_fast, macd, ema_macd = computeMACD(stock, stock_data, 30, 13, True)
     stock_data = stock_data.assign(ema_slow=ema_slow, ema_fast=ema_fast, macd=macd, ema_macd=ema_macd)
