@@ -190,7 +190,7 @@ if __name__ == "__main__":
 
     #TO BE FIXED WITH ENTRY AND REQUEST SYSTEM
     stock_selected = 'DIS'#'CRON'
-    init_data(stock_selected, '5y', 13, 30)
+    init_data(stock_selected, '5y', 12, 26)
 
     curr_data = retrieve_data(stock_selected)
     current_price, rsi, up, down = rsi_func(stock_selected, curr_data, 14)
