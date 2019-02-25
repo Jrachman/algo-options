@@ -189,7 +189,7 @@ if __name__ == "__main__":
     # - before the real-time can be run, the file for the stock must be checked
 
     #TO BE FIXED WITH ENTRY AND REQUEST SYSTEM
-    stock_selected = 'SPOT'
+    stock_selected = 'CRON'#'DIS'
     init_data(stock_selected, '5y', 13, 30)
 
     curr_data = retrieve_data(stock_selected)
