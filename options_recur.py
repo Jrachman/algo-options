@@ -35,10 +35,6 @@ import pygal
 # - https://www.investopedia.com/ask/answers/122314/what-exponential-moving-average-ema-formula-and-how-ema-calculated.asp
 # - https://en.wikipedia.org/wiki/Moving_average
 
-
-
-
-
 def nyse_is_open() -> str: #return whether or not the stock market is open right now. if it is, then continue running application; else, stop feeding data as long as market is closed
     response = requests.get("https://www.stockmarketclock.com/api-v1/status?exchange=nyse")
     return response.json()['results']['nyse']['status']
@@ -97,7 +93,6 @@ def rsi_func(stock, data, n=14, init=False):
     #else:
         #return 'string return response here'
 
-
 def ma_func(stock, data, window, init=False): #next_ma = prev_ma + (current_price / window) - (price_window_days_ago / window)
     if init == True:
         weigths = np.repeat(1, window) / window
@@ -142,7 +137,6 @@ def computeMACD(stock, x, slow=26, fast=12, init=False):
     elif init == False:
         ema_of_macd = ema_func(stock, x, 9, 'ema_macd')
         return emaslow, emafast, macd, ema_of_macd
-
 
 def init_data(stock: str, range_: str, fast: int, slow: int) -> None: #maybe change range_ to window?
     file_name = 'data-' + stock + '.csv'
